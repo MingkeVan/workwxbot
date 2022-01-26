@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ysicing/workwxbot"
+	"github.com/MingkeVan/workwxbot"
 )
 
 //func SendBot() {

@@ -18,7 +18,7 @@ import (
 func New(qywxUrl string, cropID string, agentID int64, AgentSecret string) *Client {
 
 	c := new(Client)
-	c.qywxUrl = qywxUrl
+	c.QywxUrl = qywxUrl
 	c.CropID = cropID
 	c.AgentID = agentID
 	c.AgentSecret = AgentSecret
@@ -33,7 +33,7 @@ func (c *Client) Send(msg Message) error {
 	}
 
 	msg.AgentID = c.AgentID
-	url := c.qywxUrl + "/cgi-bin/message/send?access_token=" + c.Token.AccessToken
+	url := c.QywxUrl + "/cgi-bin/message/send?access_token=" + c.Token.AccessToken
 
 	resultByte, err := JSONPost(url, msg)
 	if err != nil {
@@ -63,7 +63,7 @@ func (c *Client) Send(msg Message) error {
 func (c *Client) GetAccessToken() error {
 	var err error
 	if c.Token.AccessToken == "" || c.Token.ExpiresInTime.Before(time.Now()) {
-		c.Token, err = getAccessTokenFromWeixin(c.qywxUrl, c.CropID, c.AgentSecret)
+		c.Token, err = getAccessTokenFromWeixin(c.QywxUrl, c.CropID, c.AgentSecret)
 		if err != nil {
 			return err
 		}

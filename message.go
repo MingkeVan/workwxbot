@@ -54,7 +54,7 @@ type AccessToken struct {
 
 //Client 微信企业号应用配置信息
 type Client struct {
-	qywxUrl     string
+	QywxUrl     string
 	CropID      string
 	AgentID     int64
 	AgentSecret string
