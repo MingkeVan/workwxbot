@@ -15,9 +15,10 @@ import (
 )
 
 //New 实例化微信企业号应用
-func New(cropID string, agentID int64, AgentSecret string) *Client {
+func New(qywxUrl string, cropID string, agentID int64, AgentSecret string) *Client {
 
 	c := new(Client)
+	c.qywxUrl = qywxUrl
 	c.CropID = cropID
 	c.AgentID = agentID
 	c.AgentSecret = AgentSecret
@@ -32,7 +33,7 @@ func (c *Client) Send(msg Message) error {
 	}
 
 	msg.AgentID = c.AgentID
-	url := "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + c.Token.AccessToken
+	url := c.qywxUrl + "/cgi-bin/message/send?access_token=" + c.Token.AccessToken
 
 	resultByte, err := JSONPost(url, msg)
 	if err != nil {
@@ -62,7 +63,7 @@ func (c *Client) Send(msg Message) error {
 func (c *Client) GetAccessToken() error {
 	var err error
 	if c.Token.AccessToken == "" || c.Token.ExpiresInTime.Before(time.Now()) {
-		c.Token, err = getAccessTokenFromWeixin(c.CropID, c.AgentSecret)
+		c.Token, err = getAccessTokenFromWeixin(c.qywxUrl, c.CropID, c.AgentSecret)
 		if err != nil {
 			return err
 		}
@@ -72,8 +73,8 @@ func (c *Client) GetAccessToken() error {
 }
 
 //从微信服务器获取token
-func getAccessTokenFromWeixin(cropID, secret string) (TokenSession AccessToken, err error) {
-	WxAccessTokenURL := "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + cropID + "&corpsecret=" + secret
+func getAccessTokenFromWeixin(qywxUrl string, cropID, secret string) (TokenSession AccessToken, err error) {
+	WxAccessTokenURL := qywxUrl + "/cgi-bin/gettoken?corpid=" + cropID + "&corpsecret=" + secret
 
 	tr := &http.Transport{
 		TLSClientConfig:    &tls.Config{InsecureSkipVerify: true},
